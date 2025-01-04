@@ -101,7 +101,7 @@ def post(draw, strict=False):
 
 @composite
 def dev(draw, strict=False):
-    sep = separator(strict=strict, optional=not strict)
+    sep1 = separator(strict=strict, optional=not strict)
 
     blank = just("")
 
@@ -113,7 +113,7 @@ def dev(draw, strict=False):
     if not strict:
         num_part = one_of(blank, num_part)
 
-    return draw(one_of(blank, sep.map(lambda s: s + "dev" + draw(num_part))))
+    return draw(one_of(blank, sep1.map(lambda s: s + "dev" + draw(num_part))))
 
 
 @composite

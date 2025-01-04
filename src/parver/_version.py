@@ -164,7 +164,7 @@ class Version:
     :param post_sep2: Specify an alternate separator between the identifier and
         number. The normal form is ``'.'``.
 
-    :param dev_sep: Specify an alternate separator before the development
+    :param dev_sep1: Specify an alternate separator before the development
         release segment. The normal form is ``'.'``.
 
     :param dev_sep2: Specify an alternate separator between the identifier and
@@ -257,7 +257,7 @@ class Version:
 
         The seperator between the post release identifier and number.
 
-    .. attribute:: dev_sep
+    .. attribute:: dev_sep1
 
         The separator before the develepment release identifier.
 
@@ -326,7 +326,7 @@ class Version:
     post_sep2: Optional[Separator] = attr.ib(
         default=UNSET, validator=validate_sep_or_unset
     )
-    dev_sep: Optional[Separator] = attr.ib(
+    dev_sep1: Optional[Separator] = attr.ib(
         default=UNSET, validator=validate_sep_or_unset
     )
     dev_sep2: Union[Separator, UnsetType, None] = attr.ib(
@@ -437,13 +437,13 @@ class Version:
             set_("dev_implicit", True)
             set_("dev", 0)
         elif self.dev is None:
-            if self.dev_sep is not UNSET:
-                raise ValueError("Cannot set dev_sep without dev.")
+            if self.dev_sep1 is not UNSET:
+                raise ValueError("Cannot set dev_sep1 without dev.")
             if self.dev_sep2 is not UNSET:
                 raise ValueError("Cannot set dev_sep2 without dev.")
 
-        if self.dev_sep is UNSET:
-            set_("dev_sep", None if self.dev is None else ".")
+        if self.dev_sep1 is UNSET:
+            set_("dev_sep1", None if self.dev is None else ".")
 
         if self.dev_sep2 is UNSET:
             set_("dev_sep2", None)
@@ -493,7 +493,7 @@ class Version:
                 kwargs["post_sep2"] = s.sep2
             elif isinstance(s, segment.Dev):
                 kwargs["dev"] = s.value
-                kwargs["dev_sep"] = s.sep
+                kwargs["dev_sep1"] = s.sep1
                 kwargs["dev_sep2"] = s.sep2
             elif isinstance(s, segment.Local):
                 kwargs["local"] = s.value
@@ -547,8 +547,8 @@ class Version:
                 parts.append(str(self.post))
 
         if self.dev is not None:
-            if self.dev_sep is not None:
-                parts.append(self.dev_sep)
+            if self.dev_sep1 is not None:
+                parts.append(self.dev_sep1)
             parts.append("dev")
             if self.dev_sep2:
                 parts.append(self.dev_sep2)
@@ -680,7 +680,7 @@ class Version:
 
         if self.dev is None:
             del d["dev"]
-            del d["dev_sep"]
+            del d["dev_sep1"]
             del d["dev_sep2"]
 
         return d
@@ -699,7 +699,7 @@ class Version:
         pre_sep2: Union[Separator, None, UnsetType] = UNSET,
         post_sep1: Union[Separator, None, UnsetType] = UNSET,
         post_sep2: Union[Separator, None, UnsetType] = UNSET,
-        dev_sep: Union[Separator, None, UnsetType] = UNSET,
+        dev_sep1: Union[Separator, None, UnsetType] = UNSET,
         dev_sep2: Union[Separator, None, UnsetType] = UNSET,
         post_tag: Union[PostTag, None, UnsetType] = UNSET,
     ) -> "Version":
@@ -721,7 +721,7 @@ class Version:
             pre_sep2=pre_sep2,
             post_sep1=post_sep1,
             post_sep2=post_sep2,
-            dev_sep=dev_sep,
+            dev_sep1=dev_sep1,
             dev_sep2=dev_sep2,
             post_tag=post_tag,
         )
@@ -746,7 +746,7 @@ class Version:
             d.pop("pre_sep2", None)
 
         if kwargs.get("dev", UNSET) is None:
-            d.pop("dev_sep", None)
+            d.pop("dev_sep1", None)
             d.pop("dev_sep2", None)
 
         d.update(kwargs)

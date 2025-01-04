@@ -174,13 +174,13 @@ class VersionVisitor(PTNodeVisitor):  # type: ignore[misc]
 
     def visit_dev(self, node: Node, children: SemanticActionResults) -> segment.Dev:
         num: Union[ImplicitZero, int] = IMPLICIT_ZERO
-        sep: Union[Separator, None, UnsetType] = UNSET
+        sep1: Union[Separator, None, UnsetType] = UNSET
         sep2: Union[Separator, None, UnsetType] = UNSET
 
         for token in children:
             if isinstance(token, Sep):
-                assert sep is UNSET
-                sep = token.value
+                assert sep1 is UNSET
+                sep1 = token.value
             elif isinstance(token, int):
                 # we should only get an int if there's no sep2 - if there is,
                 # we should get a tuple
@@ -195,10 +195,10 @@ class VersionVisitor(PTNodeVisitor):  # type: ignore[misc]
                 raise AssertionError(f"unknown dev child token type: {token!r}")
 
         # if there is a dev segment at all, the first sep is always known
-        if isinstance(sep, UnsetType):
-            sep = None
+        if isinstance(sep1, UnsetType):
+            sep1 = None
 
-        return segment.Dev(value=num, sep=sep, sep2=sep2)
+        return segment.Dev(value=num, sep1=sep1, sep2=sep2)
 
     def visit_local(self, node: Node, children: SemanticActionResults) -> segment.Local:
         return segment.Local("".join(str(getattr(c, "value", c)) for c in children))
